@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dashboard - Online Meeting App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">Online Meeting App</div>
+    <div class="user">Hello, {{ user.name }} | <a href="{{ url_for('logout') }}">Logout</a></div>
+  </div>
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alerts">
+        {% for category, msg in messages %}
+          <div class="alert {{ category }}">{{ msg }}</div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Dashboard</h2>
+    <div class="grid">
+      <a class="card" href="{{ url_for('create_meeting') }}">Create Meeting</a>
+      <a class="card" href="{{ url_for('view_meetings') }}">View Upcoming</a>
+      <a class="card" href="{{ url_for('export_csv') }}">Export Meetings (CSV)</a>
+    </div>
+
+    <section>
+      <h3>Quick view — Your upcoming meetings</h3>
+
+      {% if meetings and meetings|length > 0 %}
+        <ul class="meet-list">
+        {% for m in meetings[:5] %}
+          <li><strong>{{ m.title }}</strong> — {{ m.date }} at {{ m.start_time }} (Code: {{ m.meeting_code }})</li>
+        {% endfor %}
+        </ul>
+        <a href="{{ url_for('view_meetings') }}">See all</a>
+      {% else %}
+        <p>No upcoming meetings.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

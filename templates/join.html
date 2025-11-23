@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Meeting {{ code }} - Online Meeting App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">Online Meeting App</div>
+    <div class="user"><a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">Logout</a></div>
+  </div>
+
+  <div class="box main">
+    <h2>Meeting: {{ code }}</h2>
+    <p>You joined as <strong>{{ user.name }}</strong> (this is a simulated join window in the prototype).</p>
+    <textarea placeholder="Chat (simulated)" rows="8" cols="60" readonly>Chat simulation — real-time requires WebRTC or a websocket service.</textarea>
+    <p><a href="{{ url_for('view_meetings') }}">Back to meetings</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Upcoming Meetings - Online Meeting App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">Online Meeting App</div>
+    <div class="user"><a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">Logout</a></div>
+  </div>
+
+  <div class="container">
+    <h2>Upcoming Meetings</h2>
+    {% if meetings and meetings|length > 0 %}
+      <table class="meet-table">
+        <thead><tr><th>ID</th><th>Title</th><th>Date</th><th>Time</th><th>Duration</th><th>Code</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for m in meetings %}
+          <tr>
+            <td>{{ m.meeting_id }}</td>
+            <td>{{ m.title }}</td>
+            <td>{{ m.date }}</td>
+            <td>{{ m.start_time }}</td>
+            <td>{{ m.duration_mins }}</td>
+            <td>{{ m.meeting_code }}</td>
+            <td><a class="btn small" href="{{ url_for('join_meeting', code=m.meeting_code) }}">Join</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No upcoming meetings.</p>
+    {% endif %}
+    <p><a href="{{ url_for('dashboard') }}">Back</a></p>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
