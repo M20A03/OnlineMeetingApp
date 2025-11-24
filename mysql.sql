@@ -1,0 +1,37 @@
+CREATE DATABASE IF NOT EXISTS online_meet_app;
+USE online_meet_app;
+
+CREATE TABLE IF NOT EXISTS users (
+user_id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+email VARCHAR(100) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS meetings (
+meeting_id INT AUTO_INCREMENT PRIMARY KEY,
+host_id INT NOT NULL,
+title VARCHAR(200) NOT NULL,
+meeting_code VARCHAR(20) NOT NULL UNIQUE,
+date DATE NOT NULL,
+start_time TIME NOT NULL,
+duration_mins INT NOT NULL,
+status ENUM('scheduled','cancelled','completed') DEFAULT 'scheduled',
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (host_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS attendees (
+att_id INT AUTO_INCREMENT PRIMARY KEY,
+meeting_id INT NOT NULL,
+user_id INT NOT NULL,
+join_time DATETIME,
+leave_time DATETIME,
+FOREIGN KEY (meeting_id) REFERENCES meetings(meeting_id) ON DELETE CASCADE,
+FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+
+
+
