@@ -2,22 +2,103 @@
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  
   <meta charset="utf-8" />
   <title>Meeting {{ code }} - Online Meeting App</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="meeting-body">
   <div class="topbar">
-    <div class="brand">Online Meeting App</div>
-    <div class="user"><a href="{{ url_for('dashboard') }}">Dashboard</a> | <a href="{{ url_for('logout') }}">Logout</a></div>
+    <div class="brand">
+      <span>Online Meeting App</span>
+      <span class="room-code-badge">ID: {{ code }}</span>
+    </div>
+    <div class="user">
+      <span class="live-dot">●</span> LIVE
+      <a href="{{ url_for('dashboard') }}" class="exit-link">Exit to Dashboard</a>
+    </div>
   </div>
 
-  <div class="box main">
-    <h2>Meeting: {{ code }}</h2>
-    <p>You joined as <strong>{{ user.name }}</strong> (this is a simulated join window in the prototype).</p>
-    <textarea placeholder="Chat (simulated)" rows="8" cols="60" readonly>Chat simulation — real-time requires WebRTC or a websocket service.</textarea>
-    <p><a href="{{ url_for('view_meetings') }}">Back to meetings</a></p>
+  <div class="meeting-container">
+    <!-- Main Video Grid -->
+    <div class="stage-area">
+      <div class="meeting-grid">
+        <!-- Self Tile -->
+        <div class="participant-tile self-tile" id="selfTile">
+          <div class="avatar-placeholder" id="selfAvatar">
+            {{ user.name[:2]|upper }}
+          </div>
+          <div class="tile-tag">
+            <span id="selfMicIcon">🎤</span> {{ user.name }} (You)
+          </div>
+        </div>
+
+        <!-- Remote Tile 1 -->
+        <div class="participant-tile">
+          <div class="avatar-placeholder" style="background: linear-gradient(135deg, #10B981, #059669);">
+            AI
+          </div>
+          <div class="tile-tag">
+            <span>🎤</span> AI Meeting Assistant
+          </div>
+        </div>
+      </div>
+
+      <!-- In-Meeting Interactive Controls Bar -->
+      <div class="meeting-controls" role="toolbar" aria-label="Meeting actions">
+        <button type="button" class="ctrl-btn" id="toggleMicBtn" title="Toggle Microphone">
+          <span class="icon">🎙️</span>
+          <span class="label">Mute</span>
+        </button>
+        <button type="button" class="ctrl-btn" id="toggleCamBtn" title="Toggle Camera">
+          <span class="icon">📹</span>
+          <span class="label">Stop Video</span>
+        </button>
+        <button type="button" class="ctrl-btn" id="toggleScreenBtn" title="Share Screen">
+          <span class="icon">🖥️</span>
+          <span class="label">Share</span>
+        </button>
+        <button type="button" class="ctrl-btn" id="toggleChatBtn" title="Toggle Chat Panel">
+          <span class="icon">💬</span>
+          <span class="label">Chat</span>
+        </button>
+        <a href="{{ url_for('dashboard') }}" class="ctrl-btn leave-btn" title="Leave Meeting">
+          <span class="icon">📞</span>
+          <span class="label">Leave</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Live In-Meeting Chat Drawer -->
+    <aside class="chat-sidebar" id="chatSidebar">
+      <div class="chat-header">
+        <h3>Meeting Chat</h3>
+        <span class="chat-count" id="chatCount">2 messages</span>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg-bubble system">
+          <span>You joined meeting <strong>{{ code }}</strong></span>
+        </div>
+        <div class="msg-bubble">
+          <span class="msg-author">AI Assistant</span>
+          <p class="msg-text">Welcome {{ user.name }}! Real-time audio and video connection is active.</p>
+        </div>
+      </div>
+
+      <form id="chatForm" class="chat-input-bar">
+        <input
+          type="text"
+          id="chatInput"
+          placeholder="Send a message to everyone..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit" class="send-btn" aria-label="Send message">➤</button>
+      </form>
+    </aside>
   </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+

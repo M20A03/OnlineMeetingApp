@@ -62,7 +62,7 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
   border: 1px solid var(--border-glass);
   background: var(--bg-surface-elevated);
   color: var(--text-primary);
-  font-size: 15px;
+  font-size: 16px !important; /* iOS Zoom Fix */
 }
 
 input:focus, textarea:focus {
@@ -105,28 +105,88 @@ button:hover, .btn:hover { background: var(--accent-cyan-hover); }
   border-color: var(--accent-cyan);
 }
 
-/* Dynamic Meeting Grid & Video Feed Fallback Avatar */
+/* Room Header Badges */
+.room-code-badge {
+  font-size: 12px;
+  font-family: monospace;
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--accent-cyan);
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-left: 10px;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+.live-dot {
+  color: #10B981;
+  animation: pulse-ring 1.5s infinite;
+}
+.exit-link {
+  margin-left: 14px;
+  color: var(--accent-coral) !important;
+  font-weight: 600;
+}
+
+/* Meeting Container Layout */
+.meeting-body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.meeting-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.stage-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* Meeting Video Grid */
 .meeting-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
   width: 100%;
-  padding: 16px;
 }
 .participant-tile {
   position: relative;
   background: var(--bg-surface);
-  border-radius: 12px;
+  border-radius: 16px;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-card);
+}
+.self-tile {
+  border: 2px solid var(--accent-cyan);
+}
+.tile-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .avatar-placeholder {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-cyan), #6366F1);
   display: flex;
@@ -135,10 +195,146 @@ button:hover, .btn:hover { background: var(--accent-cyan-hover); }
   font-size: 26px;
   font-weight: 700;
   color: #FFFFFF;
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+  box-shadow: 0 0 24px rgba(14, 165, 233, 0.4);
   animation: pulse-ring 2s infinite ease-in-out;
 }
 @keyframes pulse-ring {
   0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.5); }
-  50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(14, 165, 233, 0); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
 }
+
+/* Meeting Floating Controls Bar */
+.meeting-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(30, 41, 59, 0.9);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid var(--border-glass);
+  margin: 16px auto 0;
+  max-width: 520px;
+  width: 100%;
+}
+.ctrl-btn {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  min-height: 52px;
+  min-width: 60px;
+  transition: all 0.15s ease;
+}
+.ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+.ctrl-btn.active-muted {
+  background: var(--accent-coral);
+  color: #fff;
+  border-color: var(--accent-coral);
+}
+.ctrl-btn .icon {
+  font-size: 18px;
+}
+.leave-btn {
+  background: var(--accent-coral) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+.leave-btn:hover {
+  background: #E11D48 !important;
+}
+
+/* Chat Sidebar */
+.chat-sidebar {
+  width: 340px;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border-glass);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+.chat-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chat-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+.chat-count {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.chat-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.msg-bubble {
+  background: var(--bg-surface-elevated);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  border: 1px solid var(--border-glass);
+}
+.msg-bubble.system {
+  background: rgba(14, 165, 233, 0.1);
+  color: var(--accent-cyan);
+  text-align: center;
+  font-size: 12px;
+  border-color: rgba(14, 165, 233, 0.2);
+}
+.msg-author {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  display: block;
+  margin-bottom: 2px;
+}
+.chat-input-bar {
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--border-glass);
+  display: flex;
+  gap: 8px;
+}
+.chat-input-bar input {
+  margin: 0;
+  flex: 1;
+  padding: 10px 14px;
+}
+.send-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .meeting-container {
+    flex-direction: column;
+  }
+  .chat-sidebar {
+    width: 100%;
+    height: 260px;
+    border-left: none;
+    border-top: 1px solid var(--border-glass);
+  }
+}
+
