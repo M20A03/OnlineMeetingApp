@@ -37,7 +37,8 @@ body {
   backdrop-filter: blur(12px);
 }
 
-.brand { font-weight: 700; font-size: 20px; color: var(--accent-cyan); }
+.brand { font-weight: 700; font-size: 20px; color: var(--accent-cyan); text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; }
+.brand:hover { opacity: 0.85; }
 .user a { color: var(--text-secondary); text-decoration: none; margin-left: 12px; transition: color 0.2s; }
 .user a:hover { color: var(--accent-cyan); }
 
